@@ -31,6 +31,12 @@ public class AccountPage {
     @FindBy(css = "[data-test='blocked_amount']")
     private WebElement blockedAmountElement;
 
+    @FindBy(css = "[data-test='pop-icon']")
+    WebElement popIcon;
+
+
+
+
     // Method to get gross balance
     public double getGrossBalance() {
         return Double.parseDouble(grossBalanceElement.getText().replace(",", ""));
@@ -44,5 +50,16 @@ public class AccountPage {
     // Method to get blocked amount
     public double getBlockedAmount() {
         return Double.parseDouble(blockedAmountElement.getText().replace(",", ""));
+    }
+
+    public void clickPopIconButton() {
+        popIcon.click();
+    }
+
+    @FindBy(css = "[data-test='logout-btn']")
+    WebElement logoutBtn;
+    public void clickLogOutButton(){
+
+        logoutBtn.click();
     }
 }

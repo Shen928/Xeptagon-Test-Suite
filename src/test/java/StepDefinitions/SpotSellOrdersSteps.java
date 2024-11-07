@@ -101,11 +101,13 @@ public class SpotSellOrdersSteps {
     @And("the seller enters a limit sell price of {string}")
     public void the_seller_enters_a_limit_sell_price_of(String price) {
         spotPage.enterLimitPrice(price);
+        ScenarioContext.put("limitSellPrice", price);
     }
 
     @And("the seller enters a quantity of {string}")
     public void the_seller_enters_a_quantity_of(String quantity) {
         spotPage.enterQuantity(quantity);
+        ScenarioContext.put("limitSellQuantity", quantity);
     }
 
     @And("the seller submits the order")

@@ -18,8 +18,6 @@ public class BuyerAccBeforeStep {
     private AccountPage accountPage;
     public static Map<String, Double> accountBalances = new HashMap<>(); // Static map to store balances
 
-
-
     @Before
     public void setUp() {
         driver = DriverManager.getDriver();

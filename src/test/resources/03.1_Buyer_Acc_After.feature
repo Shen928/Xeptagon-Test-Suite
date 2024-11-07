@@ -8,3 +8,4 @@ Feature: Check Buyer Account Balance After Limit Buy
     Given buyer retrieve the new buyer account balance
     When buyer validate that the gross balance has decreased
     Then buyer validate that the available balance has decreased
+    And buyer logout from application

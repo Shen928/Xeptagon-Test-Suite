@@ -15,7 +15,7 @@ import java.util.Map;
 public class SellerAccBeforeStep {
     private WebDriver driver;
     private AccountPage accountPage;
-    private Map<String, Double> accountBalances; // Map to store balances
+    public static Map<String, Double> accountBalances = new HashMap<>(); // Map to store balances
 
     @Before
     public void setUp() {
@@ -24,13 +24,13 @@ public class SellerAccBeforeStep {
     }
 
     // Constructor to initialize WebDriver and AccountPage
-    public SellerAccBeforeStep() {
-        // Initialize the WebDriver (You may want to configure it according to your setup)
-//        System.setProperty("webdriver.chrome.driver", "path/to/chromedriver"); // Set the path to your ChromeDriver
-//        this.driver = new ChromeDriver();
-//        this.accountPage = new AccountPage(driver);
-        this.accountBalances = new HashMap<>();
-    }
+//    public SellerAccBeforeStep() {
+//        // Initialize the WebDriver (You may want to configure it according to your setup)
+////        System.setProperty("webdriver.chrome.driver", "path/to/chromedriver"); // Set the path to your ChromeDriver
+////        this.driver = new ChromeDriver();
+////        this.accountPage = new AccountPage(driver);
+//        this.accountBalances = new HashMap<>();
+//    }
 
     @Given("seller navigate to the account page")
     public void seller_navigate_to_the_account_page() {

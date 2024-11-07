@@ -7,9 +7,12 @@ import io.cucumber.java.en.When;
 import io.cucumber.java.en.Then;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
 import pageFactory.AccountPage;
 import org.testng.Assert;
 
+import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,7 +27,9 @@ public class BuyerAccAfterStep {
     private String spotLimitBuyCommissionType;
     private String spotLimitSellCommission;
     private String spotLimitSellCommissionType;
-    private Double fee;
+    private Double totalAmount;
+
+
 
     // Constructor or dependency injection for initial account values
     public BuyerAccAfterStep(BuyerAccBeforeStep buyerAccBeforeStep) {
@@ -85,10 +90,10 @@ public class BuyerAccAfterStep {
 
         Double priceValue = Double.parseDouble(price);
         Double quantityValue = Double.parseDouble(quantity);
-        Double BuyCommission = Double.parseDouble(spotLimitBuyCommission);
-        fee = (priceValue * quantityValue)  + (priceValue * quantityValue) * BuyCommission / 100;
+        Double buyCommission = Double.parseDouble(spotLimitBuyCommission);
+        totalAmount = (priceValue * quantityValue)  + (priceValue * quantityValue) * buyCommission / 100;
 
-        Double expectedGrossBalance = initialGrossBalance - (fee);
+        Double expectedGrossBalance = initialGrossBalance - (totalAmount);
         Assert.assertEquals(newGrossBalance, expectedGrossBalance, 0.01,"Fiat currency gross balance should match the expected new gross balance after buy order");
 
 //        System.out.println("Limit Buy Price: " + priceValue);
@@ -99,12 +104,12 @@ public class BuyerAccAfterStep {
 //        System.out.println("This is fee " + fee);
     }
 
-    @Then("buyer validate that the available balance remains unchanged")
-    public void buyer_validate_that_the_available_balance_remains_unchanged() {
+    @Then("buyer validate that the available balance has decreased")
+    public void buyer_validate_that_the_available_balance_has_decreased() {
         // Validate that the available balance has decreased accordingly
         Double initialAvailableBalance = initialAccountBalances.get("availableBalance");
         Double newAvailableBalance = newAccountBalances.get("availableBalance");
-        Double expectedGrossBalance = initialAvailableBalance - (fee);
+        Double expectedGrossBalance = initialAvailableBalance - (totalAmount);
         Assert.assertEquals(newAvailableBalance, expectedGrossBalance, 0.01,"Fiat currency available balance should match the expected new available balance after buy order");
 //        System.out.println("initialAvailableBalance" + initialAvailableBalance);
 //        System.out.println("newAvailableBalance" + newAvailableBalance);
@@ -112,10 +117,13 @@ public class BuyerAccAfterStep {
 
     }
 
-//    // Cleanup after tests
-//    public void tearDown() {
-//        if (driver != null) {
-//            driver.quit();
-//        }
-//    }
+    @Then("buyer logout from application")
+    // Cleanup after tests
+    public void buyer_logout_from_application() {
+//        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(30));
+        accountPage.clickPopIconButton();
+        accountPage.clickLogOutButton();
+
+
+    }
 }
