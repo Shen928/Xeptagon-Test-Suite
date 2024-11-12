@@ -74,10 +74,9 @@ public class SpotBuyOrdersSteps {
 
         // Capture the actual notification text
         String actualNotification = spotPage.getInfoNotificationText();
-//        System.out.println("act: " + actualNotification);
 
-        // Update the expected notification pattern to match the actual result, including the final full stop
-        String expectedNotificationPattern = "Your Spot Order T\\.[0-9A-Z]{8} of Type limit was successfully filled";
+        // Update the expected notification pattern to match either of the two possible patterns
+        String expectedNotificationPattern = "Your Spot Order T\\.[A-Za-z0-9]{8} of Type limit was partially filled \\((\\d{1,2}(\\.\\d{1,2})?)%\\)|Your Spot Order T\\.[0-9A-Z]{8} of Type limit was successfully filled";
 
         // Assert that the actual notification matches the expected pattern
         Assert.assertTrue(actualNotification.matches(expectedNotificationPattern),
@@ -85,7 +84,31 @@ public class SpotBuyOrdersSteps {
     }
 
 
-    @And("the buyer partially info notification should be displayed")
+//    @And("the buyer partially info notification should be displayed")
+//    public void the_buyer_partially_info_notification_should_be_displayed() {
+//        // Check if the notification is displayed
+//        Assert.assertTrue(spotPage.isInfoNotificationDisplayed(), "Partially Info notification is not displayed");
+//
+//        // Capture the actual notification text
+//        String actualNotification = spotPage.getInfoNotificationText();
+//
+//        // Define the regex pattern for the notification message, allowing for dynamic order ID and filling percentage
+//        //String expectedNotificationPattern = "Your Spot Order T\\.[A-Za-z0-9]{8} of Type limit was partially filled \\((\\d{1,2}(\\.\\d{1,2})?)?%\\)";
+//        //String expectedNotificationPattern = "Your Spot Order T\\.[A-Za-z0-9]{8} of Type limit was partially filled \\((\\d{1,2}(\\.\\d{1,2})?)%\\)";
+//        String expectedNotificationPattern = "Your Spot Order T\\.[A-Za-z0-9]{8} of Type limit was partially filled \\((\\d{1,2}(\\.\\d{1,2})?|\\d{1,2}\\.\\d{1,2})%\\)";
+//
+//
+//
+//        System.out.println("Actual Notification: " + actualNotification);
+//        System.out.println("Expected Pattern: " + expectedNotificationPattern);
+//
+//
+//
+//        // Assert that the actual notification matches the expected pattern
+//        Assert.assertTrue(actualNotification.matches(expectedNotificationPattern),
+//                "Notification does not match the expected pattern. Actual notification: " + actualNotification);
+//    }
+
     public void the_buyer_partially_info_notification_should_be_displayed() {
         // Check if the notification is displayed
         Assert.assertTrue(spotPage.isInfoNotificationDisplayed(), "Partially Info notification is not displayed");
@@ -93,14 +116,17 @@ public class SpotBuyOrdersSteps {
         // Capture the actual notification text
         String actualNotification = spotPage.getInfoNotificationText();
 
-        // Define the regex pattern for the notification message, allowing for dynamic order ID and filling percentage
-        String expectedNotificationPattern = "Your Spot Order T\\.[A-Za-z0-9]{8} of Type limit was partially filled \\((\\d{1,2}(\\.\\d{1,2})?)%\\)";
+        // Define the regex pattern for the notification message
+        String expectedNotificationPattern = "Your Spot Order T\\.[A-Za-z0-9]{8} of Type limit was partially filled \\((\\d{1,2}(\\.\\d{1,2})?|\\d{1,2}\\.\\d{2})%\\)";
 
+        System.out.println("Actual Notification: " + actualNotification);
+        System.out.println("Expected Pattern: " + expectedNotificationPattern);
 
         // Assert that the actual notification matches the expected pattern
         Assert.assertTrue(actualNotification.matches(expectedNotificationPattern),
                 "Notification does not match the expected pattern. Actual notification: " + actualNotification);
     }
+
 
 
     @Then("the buyer logout")

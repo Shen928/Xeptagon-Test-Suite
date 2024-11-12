@@ -4,7 +4,7 @@ import io.cucumber.testng.AbstractTestNGCucumberTests;
 import io.cucumber.testng.CucumberOptions;
 
 @CucumberOptions(
-        features = "src/test/resources", // Path to feature files
+        features = "src/test/resources/spot/", // Path to feature files
         glue = "StepDefinitions", // Path to step definition classes
         plugin = {
                 "pretty", // Output format for console

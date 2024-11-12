@@ -8,4 +8,10 @@ Feature: Check Buyer Account Balance After Limit Buy
     Given buyer retrieve the new buyer account balance
     When buyer validate that the gross balance has decreased
     Then buyer validate that the available balance has decreased
+#    And buyer logout from application
+
+  Scenario: Validate buyer credit balance after executing spot limit matching order
+    Given buyer retrieve the new buyer credit balances
+    When buyer validate that the total credit balance has increased
+    Then buyer validate that the available credit balance has increased
     And buyer logout from application

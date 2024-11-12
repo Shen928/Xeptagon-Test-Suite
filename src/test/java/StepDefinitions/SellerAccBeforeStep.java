@@ -5,22 +5,24 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.When;
 import io.cucumber.java.en.Then;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
-import pageFactory.AccountPage;
-import pageFactory.SpotBuyPage;
+import org.testng.Assert;
+import pageFactory.MyAccountPage;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class SellerAccBeforeStep {
+    private String totalCredits;
+    private String availableCredits;
     private WebDriver driver;
-    private AccountPage accountPage;
+    private MyAccountPage myAccountPage;
     public static Map<String, Double> accountBalances = new HashMap<>(); // Map to store balances
+    public static Map<String, Double> creditsBalances = new HashMap<>();
 
     @Before
     public void setUp() {
         driver = DriverManager.getDriver();
-        accountPage = new AccountPage(driver);
+        myAccountPage = new MyAccountPage(driver);
     }
 
     // Constructor to initialize WebDriver and AccountPage
@@ -41,9 +43,9 @@ public class SellerAccBeforeStep {
     @When("seller should retrieve the seller's account balance")
     public void seller_should_retrieve_the_seller_s_account_balance() {
         // Retrieve balance values using AccountPage methods
-        double grossBalance = accountPage.getGrossBalance();
-        double availableBalance = accountPage.getAvailableBalance();
-        double blockedAmount = accountPage.getBlockedAmount();
+        double grossBalance = myAccountPage.getGrossBalance();
+        double availableBalance = myAccountPage.getAvailableBalance();
+        double blockedAmount = myAccountPage.getBlockedAmount();
 
         // Store balances in the map
         accountBalances.put("grossBalance", grossBalance);
@@ -59,6 +61,32 @@ public class SellerAccBeforeStep {
         System.out.println("Blocked Amount: " + accountBalances.get("blockedAmount"));
 
         // You can also implement further validation or assertions based on your needs
+    }
+
+    @Given("seller retrieves the seller's total credit balance and available credit balance")
+    public void retrieve_Seller_Total_And_Available_Credit_Balance() {
+        // myAccountPage.printCarbonCreditValues("CAR.088");
+        // Retrieve credit balance for the specified carbon credit symbol, e.g., "CAR.002"
+        totalCredits = myAccountPage.getTotalCredit("CAR.088");
+        availableCredits = myAccountPage.getAvailableQuantity("CAR.088");
+
+        // Store credit balances in the static map
+        creditsBalances.put("totalCredits", Double.valueOf(totalCredits));
+        creditsBalances.put("availableCredits", Double.valueOf(availableCredits));
+
+        // Check that the balance and price are not null, meaning the symbol was found
+        Assert.assertNotNull("seller credit balance should not be null", totalCredits);
+        Assert.assertNotNull("seller credit available balance should not be null", availableCredits);
+    }
+
+    @Then("store the seller total credit balance and available credit balance")
+    public void store_Seller_Total_And_Available_Credit_Balance_Values() {
+        // Optionally print or log the balance values
+        System.out.println("seller Total credit Balance: " + creditsBalances.get("totalCredits"));
+        System.out.println("seller Available credit Balance: " + creditsBalances.get("availableCredits"));
+
+
+        // You can perform further assertions or operations here if necessary
     }
 
     // Cleanup after tests

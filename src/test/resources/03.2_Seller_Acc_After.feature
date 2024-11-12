@@ -10,3 +10,9 @@ Feature: Check Seller Account Balance After Limit Sell
     And the seller retrieves the new account balance
     Then the seller validates that the gross balance has increased
     And the seller validates that the available balance has increased
+
+  Scenario: Validate seller credit balance after executing spot limit matching order
+    Given seller retrieve the new seller credit balances
+    When seller validate that the total credit balance has decreased
+    Then seller validate that the available credit balance has decreased
+#    And buyer logout from application

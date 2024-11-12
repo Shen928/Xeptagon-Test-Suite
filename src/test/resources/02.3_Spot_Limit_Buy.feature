@@ -31,4 +31,4 @@ Feature: Buyer Spot Limit Order Placement
 #
 #    Examples:
 #      | limit_buy_price | quantity |
-#      | 50.00           | 8        |
+#      | 5.00            | 5        |

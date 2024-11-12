@@ -5,15 +5,13 @@ import io.cucumber.java.Before;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.When;
 import io.cucumber.java.en.Then;
-import io.cucumber.java.it.Ma;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
-import pageFactory.AccountPage;
+import pageFactory.MyAccountPage;
 import org.testng.Assert;
 import pageFactory.LoginPage;
 import pageFactory.MarketPage;
 
-import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -21,19 +19,24 @@ public class SellerAccAfterStep {
     private WebDriver driver;
     private LoginPage loginPage;
     private MarketPage marketPage;
-    private AccountPage accountPage;
+    private MyAccountPage myAccountPage;
     private Map<String, Double> initialAccountBalances;
+    private Map<String, Double> initialCreditBalances;
     private Map<String, Double> newAccountBalances;
+    private Map<String, Double> newCreditBalances;
 
     // Class-level variable to store local storage values
     private String spotLimitSellCommission;
     private Double totalAmount;
+    private Double newTotalCredits;
 
     // Constructor or dependency injection for initial account values
     public SellerAccAfterStep(SellerAccBeforeStep sellerAccBeforeStep) {
         // Retrieve initial balances from SellerAccBeforeStep
         this.initialAccountBalances = new HashMap<>(sellerAccBeforeStep.accountBalances);
+        this.initialCreditBalances = new HashMap<>(sellerAccBeforeStep.creditsBalances);
         this.newAccountBalances = new HashMap<>();
+        this.newCreditBalances = new HashMap<>();
     }
 
     @Before
@@ -41,7 +44,7 @@ public class SellerAccAfterStep {
         driver = DriverManager.getDriver();
         loginPage = new LoginPage(driver);
         marketPage = new MarketPage(driver);
-        accountPage = new AccountPage(driver);
+        myAccountPage = new MyAccountPage(driver);
 //        loginToSellerAccount();  // Log in before executing the balance check steps
     }
 
@@ -77,9 +80,9 @@ public class SellerAccAfterStep {
         spotLimitSellCommission = (String) js.executeScript("return localStorage.getItem('spotLimitSellCommission');");
 
         // Retrieve balance values after the limit sell order is placed
-        newAccountBalances.put("grossBalance", accountPage.getGrossBalance());
-        newAccountBalances.put("availableBalance", accountPage.getAvailableBalance());
-        newAccountBalances.put("blockedAmount", accountPage.getBlockedAmount());
+        newAccountBalances.put("grossBalance", myAccountPage.getGrossBalance());
+        newAccountBalances.put("availableBalance", myAccountPage.getAvailableBalance());
+        newAccountBalances.put("blockedAmount", myAccountPage.getBlockedAmount());
 
         System.out.println("New Gross Balance: " + newAccountBalances.get("grossBalance"));
         System.out.println("New Available Balance: " + newAccountBalances.get("availableBalance"));
@@ -109,8 +112,84 @@ public class SellerAccAfterStep {
     public void seller_validate_that_the_available_balance_has_increased() {
         Double initialAvailableBalance = initialAccountBalances.get("availableBalance");
         Double newAvailableBalance = newAccountBalances.get("availableBalance");
-
+        System.out.println("newAvailableBalance " + newAvailableBalance);
         Double expectedAvailableBalance = initialAvailableBalance + totalAmount;
+        System.out.println("seller expectedAvailableBalance" + expectedAvailableBalance);
         Assert.assertEquals(newAvailableBalance, expectedAvailableBalance, 0.01, "Fiat currency available balance should match the expected new available balance after sell order");
     }
+
+
+
+
+    //credit
+    @Given("seller retrieve the new seller credit balances")
+    public void seller_retrieve_the_new_seller_credit_balances() {
+//        driver.get("http://localhost:5173/myAssets/myAccount");
+//
+//        // Cast WebDriver to JavascriptExecutor
+//        JavascriptExecutor js = (JavascriptExecutor) driver;
+//
+//        // Get value from local storage and store it in the class variable
+//        spotLimitBuyCommission = (String) js.executeScript("return localStorage.getItem('spotLimitBuyCommission');");
+//        spotLimitBuyCommissionType = (String) js.executeScript("return localStorage.getItem('spotLimitBuyCommissionType');");
+//        spotLimitSellCommission = (String) js.executeScript("return localStorage.getItem('spotLimitSellCommission');");
+//        spotLimitSellCommissionType = (String) js.executeScript("return localStorage.getItem('spotLimitSellCommissionType');");
+
+
+        // Retrieve balance values after the limit buy order is placed
+        newCreditBalances.put("totalCredits", Double.valueOf(myAccountPage.getTotalCredit("CAR.088")));
+
+        newCreditBalances.put("availableCredits", Double.valueOf(myAccountPage.getAvailableQuantity("CAR.088")));
+
+
+        System.out.println("New total seller Credits Balance: " + newCreditBalances.get("totalCredits"));
+        System.out.println("New Available seller credits Balance: " + newCreditBalances.get("availableCredits"));
+
+
+    }
+
+    @When("seller validate that the total credit balance has decreased")
+    public void seller_validate_that_the_total_credit_has_decreased() {
+
+        // Retrieve the stored price and quantity
+        String price = (String) ScenarioContext.get("limitSellPrice");
+        String quantity = (String) ScenarioContext.get("limitSellQuantity");
+        Double quantityValue = Double.parseDouble(quantity);
+
+        // Validate that the total credit has decreased accordingly
+        Double initialTotalCredits = initialCreditBalances.get("totalCredits");
+        Double newTotalCredits = newCreditBalances.get("totalCredits");
+
+
+        Double expectedCreditBalance = initialTotalCredits - quantityValue;
+        Assert.assertEquals(newTotalCredits, expectedCreditBalance, 0.01, "Seller total credit balance should match the expected new total credit balance after sell order");
+
+    }
+
+    @Then("seller validate that the available credit balance has decreased")
+    public void buyer_validate_that_the_available_credit_balance_has_decreased() {
+        // Retrieve the stored price and quantity
+        String quantity = (String) ScenarioContext.get("limitSellQuantity");
+        Double quantityValue = Double.parseDouble(quantity);
+
+        // Validate that the total credit has decreased accordingly
+        Double initialAvailableCredits = initialCreditBalances.get("availableCredits");
+        Double newAvailableCredits = newCreditBalances.get("availableCredits");
+
+
+        Double expectedCreditBalance = initialAvailableCredits - quantityValue;
+        Assert.assertEquals(newAvailableCredits, expectedCreditBalance, 0.01, "Seller available credit balance should match the expected new available credit balance after sell order");
+
+    }
+
+
+//    @Then("buyer logout from application")
+//    // Cleanup after tests
+//    public void buyer_logout_from_application() {
+////        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(30));
+//        myAccountPage.clickPopIconButton();
+//        myAccountPage.clickLogOutButton();
+//
+//
+//    }
 }

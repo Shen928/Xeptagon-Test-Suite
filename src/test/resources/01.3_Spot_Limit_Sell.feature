@@ -17,4 +17,4 @@ Feature: Seller Spot Limit Order Placement
     Examples:
       | limit_sell_price | quantity |
       | 5.00             | 1        |
-#      | 50.00            | 2        |
+      | 5.00             | 2        |

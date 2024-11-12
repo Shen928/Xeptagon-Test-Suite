@@ -9,3 +9,6 @@ Feature: Check Seller Account Balance Before Limit Sell
     When seller should retrieve the seller's account balance
     Then store the seller account balance values
 
+  Scenario: Validate carbon credit balance before executing spot limit sell order
+    Given seller retrieves the seller's total credit balance and available credit balance
+    Then store the seller total credit balance and available credit balance
