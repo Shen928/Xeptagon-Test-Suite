@@ -1,9 +1,9 @@
 
 Feature: Seller Spot Limit Partially Filled Order Placement
 
-  In order to trade assets on the platform
-  As a seller user
-  I want to place spot sell limit orders after logging in
+#  In order to trade assets on the platform
+#  As a seller user
+#  I want to place spot sell limit orders after logging in
 
   Scenario Outline: Check seller login is successful with valid credentials
     Given user is on login

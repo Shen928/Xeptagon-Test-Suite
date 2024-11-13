@@ -183,6 +183,33 @@ public class SellerAccAfterStep {
     }
 
 
+    @Then("the seller's available account balance should be unchanged from the initial available account balance")
+    public void sellers_available_account_balance_should_be_unchanged_from_the_initial_available_account_balance() {
+        // Logic to compare the current account balance with the initial account balance
+        Double initialAvailableBalance = initialAccountBalances.get("availableBalance");
+        Double newAvailableBalance = newAccountBalances.get("availableBalance");
+        System.out.println("seller newAvailableBalance " + newAvailableBalance);
+        Double expectedAvailableBalance = initialAvailableBalance;
+        System.out.println("seller expectedAvailableBalance " + expectedAvailableBalance);
+        Assert.assertEquals(newAvailableBalance, expectedAvailableBalance, 0.01, "Fiat currency available balance should not be changed after canceled spot limit sell orders");
+    }
+
+    @When("the available carbon credit balance should equal the initial credit balance")
+    public void available_carbon_credit_balance_should_equal_the_initial_credit_balance() {
+        // Logic to compare the available carbon credit balance with the initial credit balance
+
+        // Validate that the total credit has decreased accordingly
+        Double initialAvailableCredits = initialCreditBalances.get("availableCredits");
+        Double newAvailableCredits = newCreditBalances.get("availableCredits");
+
+        Double expectedCreditBalance = initialAvailableCredits;
+        Assert.assertEquals(newAvailableCredits, expectedCreditBalance, 0.01, "Buyer available credit balance should not be changed after canceled spot limit sell orders");
+        System.out.println("initialAvailableCredits " + initialAvailableCredits);
+        System.out.println("newAvailableCredits " + newAvailableCredits);
+    }
+
+
+
 //    @Then("buyer logout from application")
 //    // Cleanup after tests
 //    public void buyer_logout_from_application() {

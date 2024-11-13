@@ -1,5 +1,5 @@
 
-Feature: Seller Spot Limit Full Filled Order Placement
+Feature: Seller Spot Limit Partially Filled Order Placement
 
 #  In order to trade assets on the platform
 #  As a seller user
@@ -35,7 +35,7 @@ Feature: Seller Spot Limit Full Filled Order Placement
 
     Examples:
       | limit_sell_price | quantity |
-      | 5.00             | 1        |
+      | 5.00             | 2        |
 #      | 5.00             | 2        |
 
   Scenario Outline: Check buyer login is successful with valid credentials
@@ -69,12 +69,13 @@ Feature: Seller Spot Limit Full Filled Order Placement
 
     Examples:
       | limit_buy_price | quantity |
-      | 5.00            | 1        |
+      | 5.00            | 7        |
 
   Scenario: Validate buyer account balance after executing spot limit matching order
     Given buyer retrieve the new buyer account balance
     When buyer validate that the gross balance has decreased
     Then buyer validate that the available balance has decreased
+    And buyer validate that the block amount has changed
 #    And buyer logout from application
 
   Scenario: Validate buyer credit balance after executing spot limit matching order
@@ -94,3 +95,4 @@ Feature: Seller Spot Limit Full Filled Order Placement
     Given seller retrieve the new seller credit balances
     When seller validate that the total credit balance has decreased
     Then seller validate that the available credit balance has decreased
+

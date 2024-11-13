@@ -77,6 +77,8 @@ import org.openqa.selenium.WebDriver;
 import org.testng.Assert;
 import pageFactory.SpotSellPage;
 
+import static org.testng.AssertJUnit.assertTrue;
+
 public class SpotSellOrdersSteps {
 
     SpotSellPage spotPage;
@@ -121,6 +123,27 @@ public class SpotSellOrdersSteps {
 
         String expectedMessage = "Your order has been successfully placed";
         Assert.assertEquals(spotPage.getSuccessMessageText(), expectedMessage);
+    }
+
+    @And("seller cancels all open spot limit sell orders")
+    public void seller_cancels_all_open_spot_limit_sell_orders() throws InterruptedException {
+        // Wait for 10 seconds
+        Thread.sleep(6000);
+
+        spotPage.clickCancelAllButton();
+        Assert.assertTrue(spotPage.isSuccessMessageDisplayed(), "Success message is not displayed");
+
+        String expectedMessage = "Your order cancellation request to cancel all orders has been successfully placed";
+        Assert.assertEquals(spotPage.getSuccessMessageText(), expectedMessage);
+    }
+
+    @And("all orders should be canceled successfully")
+    public void all_orders_should_be_canceled_successfully() {
+        // Refresh the current page
+        driver.navigate().refresh();
+
+        boolean ordersCanceled = spotPage.areAllOrdersCanceled();
+        assertTrue("All orders should be canceled successfully, but some cancellations of spot orders of type Limit failed.", ordersCanceled);
     }
 
     @Then("the seller logout")

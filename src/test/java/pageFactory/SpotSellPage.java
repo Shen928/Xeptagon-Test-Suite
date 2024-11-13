@@ -10,6 +10,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
+import java.util.List;
 
 public class SpotSellPage {
     private WebDriver driver;
@@ -42,6 +43,16 @@ public class SpotSellPage {
     @FindBy(id="info-notification")
     WebElement infoNotification;
 
+    @FindBy(css = "[data-test='cancel-all-btn']")
+    WebElement cancelAllButton;
+
+    @FindBy(css = "[data-test='cancel-now']")
+    WebElement cancelNowButton;
+
+    // Locate all order id rows
+    @FindBy(css = "[data-test='openOrderId']")
+    List<WebElement> openOrderIds;
+
     public void selectLimitOrderType() {
         orderType.click();
 
@@ -63,7 +74,7 @@ public class SpotSellPage {
 
     // Updated method to check if the success message is displayed with WebDriverWait
     public boolean isSuccessMessageDisplayed() {
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
         try {
             wait.until(ExpectedConditions.visibilityOf(successMessage));
             return successMessage.isDisplayed();
@@ -75,6 +86,18 @@ public class SpotSellPage {
     public String getSuccessMessageText() {
         return successMessage.getText();
     }
+
+    public void clickCancelAllButton(){
+        cancelAllButton.click();
+        cancelNowButton.click();
+
+    }
+
+    public boolean areAllOrdersCanceled() {
+        return openOrderIds.isEmpty(); // Returns true if no open order IDs are found
+    }
+
+
 //
 //    public boolean isInfoNotificationDisplayed() {
 //        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
