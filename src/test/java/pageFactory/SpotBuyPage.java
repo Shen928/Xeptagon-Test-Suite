@@ -10,6 +10,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
+import java.util.List;
 
 public class SpotBuyPage {
     private WebDriver driver;
@@ -42,6 +43,16 @@ public class SpotBuyPage {
     @FindBy(id="info-notification")
     WebElement infoNotification;
 
+    @FindBy(css = "[data-test='cancel-all-btn']")
+    WebElement cancelAllButton;
+
+    @FindBy(css = "[data-test='cancel-now']")
+    WebElement cancelNowButton;
+
+    // Locate all order id rows
+    @FindBy(css = "[data-test='openOrderId']")
+    List<WebElement> openOrderIds;
+
     public void selectLimitOrderType() {
         orderType.click();
 
@@ -62,7 +73,7 @@ public class SpotBuyPage {
     }
 
     public boolean isSuccessMessageDisplayed() {
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(8));
         try {
             wait.until(ExpectedConditions.visibilityOf(successMessage));
             return successMessage.isDisplayed();
@@ -87,5 +98,24 @@ public class SpotBuyPage {
 
     public String getInfoNotificationText() {
         return infoNotification.getText();
+    }
+
+    public void clickCancelAllButton(){
+        cancelAllButton.click();
+
+        // Wait for a specific time interval (e.g., 2 seconds)
+        try {
+            Thread.sleep(2000); // 2000 milliseconds = 2 seconds
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        cancelNowButton.click();
+        infoNotification.click();
+
+    }
+
+    public boolean areAllOrdersCanceled() {
+        return openOrderIds.isEmpty(); // Returns true if no open order IDs are found
     }
 }

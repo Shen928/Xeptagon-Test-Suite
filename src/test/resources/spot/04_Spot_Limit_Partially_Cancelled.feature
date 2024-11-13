@@ -15,12 +15,12 @@ Feature: Seller Spot Limit Partially Filled Order Placement
       | email | password |
       | shehans+EX2@xeptagon.com | EX2@xeptagon.coM |
 
-  Scenario: Validate account balance before executing spot limit sell order
+  Scenario: Validate seller account balance before executing spot limit sell order
     Given seller navigate to the account page
     When seller should retrieve the seller's account balance
     Then store the seller account balance values
 
-  Scenario: Validate carbon credit balance before executing spot limit sell order
+  Scenario: Validate seller carbon credit balance before executing spot limit sell order
     Given seller retrieves the seller's total credit balance and available credit balance
     Then store the seller total credit balance and available credit balance
 
@@ -82,6 +82,16 @@ Feature: Seller Spot Limit Partially Filled Order Placement
     Given buyer retrieve the new buyer credit balances
     When buyer validate that the total credit balance has increased
     Then buyer validate that the available credit balance has increased
+
+
+  Scenario: Buyer cancels partially filled open spot limit buy orders
+    Given buyer navigates to the account page
+    When buyer retrieve the new buyer account balance
+    Then the buyer navigates to the spot order placement page
+    And the buyer cancels the partially filled open spot limit buy order
+    And the partially filled spot order should be canceled successfully
+    When buyer retrieve the new buyer account balance after cancelling
+    Then the fiat currency available balance and block amount should be changed
     And buyer logout from application
 
   Scenario: Validate seller account balance after executing a spot limit sell order
@@ -95,4 +105,7 @@ Feature: Seller Spot Limit Partially Filled Order Placement
     Given seller retrieve the new seller credit balances
     When seller validate that the total credit balance has decreased
     Then seller validate that the available credit balance has decreased
+
+
+
 

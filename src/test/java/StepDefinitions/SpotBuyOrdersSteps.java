@@ -10,6 +10,8 @@ import org.openqa.selenium.WebDriver;
 import org.testng.Assert;
 import pageFactory.SpotBuyPage;
 
+import static org.testng.AssertJUnit.assertTrue;
+
 public class SpotBuyOrdersSteps {
 
     SpotBuyPage spotPage;
@@ -128,9 +130,32 @@ public class SpotBuyOrdersSteps {
     }
 
 
+    @When("the buyer cancels the partially filled open spot limit buy order")
+    public void the_buyer_cancels_the_partially_filled_open_spot_limit_buy_order() throws InterruptedException {
+        // Wait for 10 seconds
+//        Thread.sleep(6000);
+
+        spotPage.clickCancelAllButton();
+        Assert.assertTrue(spotPage.isSuccessMessageDisplayed(), "Success message is not displayed");
+
+        String expectedMessage = "Your order cancellation request to cancel all orders has been successfully placed";
+        Assert.assertEquals(spotPage.getSuccessMessageText(), expectedMessage);
+    }
+
+    @Then("the partially filled spot order should be canceled successfully")
+    public void the_partially_filled_spot_order_should_be_canceled_successfully() {
+        // Refresh the current page
+        driver.navigate().refresh();
+
+        boolean ordersCanceled = spotPage.areAllOrdersCanceled();
+        assertTrue("All orders should be canceled successfully, but some cancellations of spot orders of type Limit failed.", ordersCanceled);
+    }
+
 
     @Then("the buyer logout")
     public void the_buyer_logout() {
 //        driver.close();
     }
+
+
 }
