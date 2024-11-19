@@ -27,6 +27,7 @@ public class SellerAccAfterStep {
 
     // Class-level variable to store local storage values
     private String spotLimitSellCommission;
+    private String spotLimitBuyCommission;
     private Double totalAmount;
     private Double newTotalCredits;
 
@@ -79,6 +80,8 @@ public class SellerAccAfterStep {
         // Get commission value from local storage and store it in the class variable
         spotLimitSellCommission = (String) js.executeScript("return localStorage.getItem('spotLimitSellCommission');");
 
+        spotLimitBuyCommission = (String) js.executeScript("return localStorage.getItem('spotLimitBuyCommission');");
+
         // Retrieve balance values after the limit sell order is placed
         newAccountBalances.put("grossBalance", myAccountPage.getGrossBalance());
         newAccountBalances.put("availableBalance", myAccountPage.getAvailableBalance());
@@ -101,9 +104,12 @@ public class SellerAccAfterStep {
         Double priceValue = Double.parseDouble(price);
         Double quantityValue = Double.parseDouble(quantity);
         Double sellCommission = Double.parseDouble(spotLimitSellCommission);
+
         totalAmount = (priceValue * quantityValue) - ((priceValue * quantityValue) * sellCommission / 100);
+
         System.out.println("sellCommission " + sellCommission);
         System.out.println("totalAmount " + totalAmount);
+
         Double expectedGrossBalance = initialGrossBalance + totalAmount;
         Assert.assertEquals(newGrossBalance, expectedGrossBalance, 0.01, "Fiat currency gross balance should match the expected new gross balance after sell order");
     }
@@ -208,8 +214,48 @@ public class SellerAccAfterStep {
         System.out.println("newAvailableCredits " + newAvailableCredits);
     }
 
+    @When("the seller validates that the block amount has increased")
+    public void seller_validate_that_the_block_amount_has_increased() {
+        // Retrieve the stored price and quantity
+        String price = (String) ScenarioContext.get("limitBuyPrice");
+        String quantity = (String) ScenarioContext.get("limitBuyQuantity");
+
+        Double initialGrossBalance = initialAccountBalances.get("grossBalance");
+        Double initialBlockedBalance = initialAccountBalances.get("blockedAmount");
+
+        Double newGrossBalance = newAccountBalances.get("grossBalance");
+        Double newBlockedAmount = newAccountBalances.get("blockedAmount");
+
+        Double priceValue = Double.parseDouble(price);
+        Double quantityValue = Double.parseDouble(quantity);
+        Double sellCommission = Double.parseDouble(spotLimitSellCommission);
+        Double buyCommission = Double.parseDouble(spotLimitBuyCommission);
+        totalAmount = (priceValue * quantityValue) + ((priceValue * quantityValue) * buyCommission / 100);
+        System.out.println("sellCommission " + sellCommission);
+        System.out.println("totalAmount " + totalAmount);
+        Double expectedBlockedBalance = initialBlockedBalance + totalAmount;
+        Assert.assertEquals(newBlockedAmount, expectedBlockedBalance, 0.01, "Fiat currency blocked amount  should be increased");
+    }
+
+    @Then("the seller validates that the available balance has decreased")
+    public void seller_validate_that_the_available_balance_has_decreased() {
+        Double initialAvailableBalance = initialAccountBalances.get("availableBalance");
+        Double newAvailableBalance = newAccountBalances.get("availableBalance");
+        System.out.println("newAvailableBalance " + newAvailableBalance);
+        Double expectedAvailableBalance = initialAvailableBalance - totalAmount;
+        System.out.println("seller expectedAvailableBalance" + expectedAvailableBalance);
+        Assert.assertEquals(newAvailableBalance, expectedAvailableBalance, 0.01, "Fiat currency available balance should match the expected new available balance after sell order");
+    }
+
+    @Then("seller logout from application")
+    // Cleanup after tests
+    public void buyer_logout_from_application() {
+//        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(30));
+        myAccountPage.clickPopIconButton();
+        myAccountPage.clickLogOutButton();
 
 
+    }
 //    @Then("buyer logout from application")
 //    // Cleanup after tests
 //    public void buyer_logout_from_application() {

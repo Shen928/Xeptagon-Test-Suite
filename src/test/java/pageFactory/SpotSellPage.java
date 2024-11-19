@@ -86,7 +86,10 @@ public class SpotSellPage {
     public String getSuccessMessageText() {
         return successMessage.getText();
     }
-
+    // Method to check if "Cancel All" button is enabled
+    public boolean isCancelAllButtonEnabled() {
+        return cancelAllButton.isEnabled();
+    }
     public void clickCancelAllButton(){
         cancelAllButton.click();
         cancelNowButton.click();
@@ -97,6 +100,19 @@ public class SpotSellPage {
         return openOrderIds.isEmpty(); // Returns true if no open order IDs are found
     }
 
+    public boolean isInfoNotificationDisplayed() {
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(8));
+        try {
+            wait.until(ExpectedConditions.visibilityOf(infoNotification));
+            return infoNotification.isDisplayed();
+        } catch (Exception e) {
+            return false; // Return false if the message does not appear within 3 seconds
+        }
+    }
+
+    public String getInfoNotificationText() {
+        return infoNotification.getText();
+    }
 
 //
 //    public boolean isInfoNotificationDisplayed() {

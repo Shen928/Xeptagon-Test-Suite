@@ -51,6 +51,9 @@ public class MyAccountPage {
     @FindBy(css = "[data-test='totalQuantity']")
     List<WebElement> totalQuantityCells;
 
+    @FindBy(css = "[data-test='blockedQuantity']")
+    List<WebElement> blockedQuantity;
+
     @FindBy(css = "[data-test='lastPrice']")
     List<WebElement> lastPriceCells;
 
@@ -98,6 +101,16 @@ public class MyAccountPage {
         for (int i = 0; i < carbonCreditSymbols.size(); i++) {
             if (carbonCreditSymbols.get(i).getText().equals(symbol)) {
                 return availableQuantityCells.get(i).getText();
+            }
+        }
+        return null; // Return null if the symbol is not found
+    }
+
+    // Method to get blocked credit quantity for a specific symbol
+    public String getBlockedCredits(String symbol) {
+        for (int i = 0; i < carbonCreditSymbols.size(); i++) {
+            if (carbonCreditSymbols.get(i).getText().equals(symbol)) {
+                return blockedQuantity.get(i).getText();
             }
         }
         return null; // Return null if the symbol is not found

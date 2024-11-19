@@ -40,6 +40,21 @@ public class SpotBuyOrdersSteps {
         ScenarioContext.put("limitBuyPrice", price);
     }
 
+    @And("the buyer enters a limit sell price of {string}")
+    public void the_buyer_enters_a_limit_sell_price_of(String price) {
+        spotPage.enterLimitPrice(price);
+        // Store price in shared context
+        ScenarioContext.put("limitSellPrice", price);
+    }
+
+    @And("the buyer enters a sell quantity of {string}")
+    public void the_buyer_enters_a_sell_quantity_of(String quantity) {
+        spotPage.enterQuantity(quantity);
+        // Store quantity in shared context
+        ScenarioContext.put("limiSellQuantity", quantity);
+    }
+
+
     @And("the buyer enters a quantity of {string}")
     public void the_buyer_enters_a_quantity_of(String quantity) {
         spotPage.enterQuantity(quantity);
@@ -78,7 +93,9 @@ public class SpotBuyOrdersSteps {
         String actualNotification = spotPage.getInfoNotificationText();
 
         // Update the expected notification pattern to match either of the two possible patterns
-        String expectedNotificationPattern = "Your Spot Order T\\.[A-Za-z0-9]{8} of Type limit was partially filled \\((\\d{1,2}(\\.\\d{1,2})?)%\\)|Your Spot Order T\\.[0-9A-Z]{8} of Type limit was successfully filled";
+        //String expectedNotificationPattern = "Your Spot Order T\\.[A-Za-z0-9]{8} of Type limit was partially filled \\((\\d{1,2}(\\.\\d{1,2})?)%\\)|Your Spot Order T\\.[0-9A-Z]{8} of Type limit was successfully filled";
+        String expectedNotificationPattern = "Your Spot Order T\\.[A-Za-z0-9]{8} of Type limit was partially filled \\((\\d{1,2}(\\.\\d{1,2})?)%\\)|Your Spot Order T\\.[A-Za-z0-9]{8} of Type limit was successfully filled|Your Limit Order T\\.[A-Za-z0-9]{8} was automatically terminated by the system";
+
 
         // Assert that the actual notification matches the expected pattern
         Assert.assertTrue(actualNotification.matches(expectedNotificationPattern),
@@ -151,6 +168,26 @@ public class SpotBuyOrdersSteps {
         assertTrue("All orders should be canceled successfully, but some cancellations of spot orders of type Limit failed.", ordersCanceled);
     }
 
+    @And("buyer cancels all open spot limit sell orders")
+    public void buyer_cancels_all_open_spot_limit_sell_orders() throws InterruptedException {
+        // Wait for 10 seconds
+        Thread.sleep(6000);
+
+        spotPage.clickCancelAllButton();
+        Assert.assertTrue(spotPage.isSuccessMessageDisplayed(), "Success message is not displayed");
+
+        String expectedMessage = "Your order cancellation request to cancel all orders has been successfully placed";
+        Assert.assertEquals(spotPage.getSuccessMessageText(), expectedMessage);
+    }
+
+    @And("buyer all orders should be canceled successfully")
+    public void buyer_all_orders_should_be_canceled_successfully() {
+        // Refresh the current page
+        driver.navigate().refresh();
+
+        boolean ordersCanceled = spotPage.areAllOrdersCanceled();
+        assertTrue("All orders should be canceled successfully, but some cancellations of spot orders of type Limit failed.", ordersCanceled);
+    }
 
     @Then("the buyer logout")
     public void the_buyer_logout() {

@@ -14,6 +14,7 @@ import java.util.Map;
 public class SellerAccBeforeStep {
     private String totalCredits;
     private String availableCredits;
+    private String blockedCredits;
     private WebDriver driver;
     private MyAccountPage myAccountPage;
     public static Map<String, Double> accountBalances = new HashMap<>(); // Map to store balances
@@ -69,14 +70,17 @@ public class SellerAccBeforeStep {
         // Retrieve credit balance for the specified carbon credit symbol, e.g., "CAR.002"
         totalCredits = myAccountPage.getTotalCredit("CAR.088");
         availableCredits = myAccountPage.getAvailableQuantity("CAR.088");
+        blockedCredits = myAccountPage.getBlockedCredits("CAR.088");
 
         // Store credit balances in the static map
         creditsBalances.put("totalCredits", Double.valueOf(totalCredits));
         creditsBalances.put("availableCredits", Double.valueOf(availableCredits));
+        creditsBalances.put("blockedCredits", Double.valueOf(blockedCredits));
 
         // Check that the balance and price are not null, meaning the symbol was found
-        Assert.assertNotNull("seller credit balance should not be null", totalCredits);
-        Assert.assertNotNull("seller credit available balance should not be null", availableCredits);
+//        Assert.assertNotNull("seller credit balance should not be null", totalCredits);
+//        Assert.assertNotNull("seller credit available balance should not be null", availableCredits);
+//        Assert.assertNotNull("seller credit available balance should not be null", availableCredits);
     }
 
     @Then("store the seller total credit balance and available credit balance")

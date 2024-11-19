@@ -90,6 +90,8 @@ public class SpotSellOrdersSteps {
         spotPage = new SpotSellPage(driver);
     }
 
+
+
     @Given("the seller navigates to the spot order placement page")
     public void the_seller_navigates_to_the_spot_order_placement_page() {
         driver.get("http://localhost:5173/trade/spot/CAR.088"); // Replace with actual URL
@@ -146,9 +148,29 @@ public class SpotSellOrdersSteps {
         assertTrue("All orders should be canceled successfully, but some cancellations of spot orders of type Limit failed.", ordersCanceled);
     }
 
+    @And("the seller info notification should be displayed")
+    public void the_seller_info_notification_should_be_displayed() {
+        // Check if the notification is displayed
+        Assert.assertTrue(spotPage.isInfoNotificationDisplayed(), "Info notification is not displayed");
+
+        // Capture the actual notification text
+        String actualNotification = spotPage.getInfoNotificationText();
+
+        // Update the expected notification pattern to match either of the two possible patterns
+        //String expectedNotificationPattern = "Your Spot Order T\\.[A-Za-z0-9]{8} of Type limit was partially filled \\((\\d{1,2}(\\.\\d{1,2})?)%\\)|Your Spot Order T\\.[0-9A-Z]{8} of Type limit was successfully filled";
+        String expectedNotificationPattern = "Your Spot Order T\\.[A-Za-z0-9]{8} of Type limit was partially filled \\((\\d{1,2}(\\.\\d{1,2})?)%\\)|Your Spot Order T\\.[A-Za-z0-9]{8} of Type limit was successfully filled|Your Limit Order T\\.[A-Za-z0-9]{8} was automatically terminated by the system";
+
+
+        // Assert that the actual notification matches the expected pattern
+        Assert.assertTrue(actualNotification.matches(expectedNotificationPattern),
+                "Notification does not match the expected pattern. Actual notification: " + actualNotification);
+    }
+
     @Then("the seller logout")
     public void the_seller_logout() {
 //        driver.close();
     }
+
+
 
 }

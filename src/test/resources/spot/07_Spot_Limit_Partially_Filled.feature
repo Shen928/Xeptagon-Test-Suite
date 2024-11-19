@@ -1,9 +1,9 @@
 #
-#Feature: Seller Spot Limit Partially Filled Order Placement
+#Feature: Spot Limit Partially Filled Order Placement
 #
-#  In order to trade assets on the platform
-#  As a seller user
-#  I want to place spot sell limit orders after logging in
+#  In order to trade assets on the platform,
+#  both sellers and buyers can place spot limit sell and buy orders
+#  after logging in for them to be partially filled.
 #
 #  Scenario Outline: Check seller login is successful with valid credentials
 #    Given user is on login
@@ -31,11 +31,11 @@
 #    And the seller enters a quantity of "<quantity>"
 #    And the seller submits the order
 #    And the sell order should be placed successfully
-#    Then the seller logout
+##    Then the seller logout
 #
 #    Examples:
 #      | limit_sell_price | quantity |
-#      | 5.00             | 10       |
+#      | 5.00             | 2        |
 ##      | 5.00             | 2        |
 #
 #  Scenario Outline: Check buyer login is successful with valid credentials
@@ -65,39 +65,11 @@
 #    And the buyer submits the order
 #    And the buy order should be placed successfully
 #    And the buyer info notification should be displayed
-#    Then the buyer logout
+##    Then the buyer logout
 #
 #    Examples:
 #      | limit_buy_price | quantity |
-#      | 5.00            | 3        |
-#
-#  Scenario: Validate buyer account balance after executing spot limit matching order
-#    Given buyer retrieve the new buyer account balance
-#    When buyer validate that the gross balance has decreased
-#    Then buyer validate that the available balance has decreased
-#    And buyer validate that the block amount has changed
-##    And buyer logout from application
-#
-#  Scenario: Validate buyer credit balance after executing spot limit matching order
-#    Given buyer retrieve the new buyer credit balances
-#    When buyer validate that the total credit balance has increased
-#    Then buyer validate that the available credit balance has increased
-##    And buyer logout from application
-#
-#  Scenario Outline: Place a Buy Spot Limit Order
-#    Given the buyer navigates to the spot order placement page
-#    When the buyer selects the order type
-#    And the buyer enters a limit buy price of "<limit_buy_price>"
-#    And the buyer enters a quantity of "<quantity>"
-#    And the buyer submits the order
-#    And the buy order should be placed successfully
-#    And the buyer info notification should be displayed
-#    Then the buyer logout
-#
-#    Examples:
-#      | limit_buy_price | quantity |
-#      | 5.00            | 12        |
-#
+#      | 5.00            | 7        |
 #
 #  Scenario: Validate buyer account balance after executing spot limit matching order
 #    Given buyer retrieve the new buyer account balance

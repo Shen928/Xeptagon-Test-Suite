@@ -99,7 +99,9 @@ public class SpotBuyPage {
     public String getInfoNotificationText() {
         return infoNotification.getText();
     }
-
+    public boolean isCancelAllButtonEnabled() {
+        return cancelAllButton.isEnabled();
+    }
     public void clickCancelAllButton(){
         cancelAllButton.click();
 

@@ -1,8 +1,9 @@
-Feature: Seller Spot Limit Full Filled Order Placement and Cancellation
 
-  In order to trade assets on the platform
-  As a seller user
-  I want to place spot sell limit orders, and then cancel them to verify account and carbon credit balance updates
+Feature: Seller Spot Limit Terminated Order Placement
+
+  In order to trade assets on the platform,
+  users can place spot limit sell and buy orders,
+  which will be terminated (self-matching) after logging in.
 
   Scenario Outline: Check seller login is successful with valid credentials
     Given user is on login
@@ -30,18 +31,28 @@ Feature: Seller Spot Limit Full Filled Order Placement and Cancellation
     And the seller enters a quantity of "<quantity>"
     And the seller submits the order
     And the sell order should be placed successfully
+#    Then the seller logout
 
     Examples:
       | limit_sell_price | quantity |
       | 5.00             | 1        |
-      | 6.00             | 1        |
-      | 7.00             | 1        |
-#      | 8.00             | 1        |
-#      | 9.00             | 1        |
+#      | 5.00             | 2        |
 
-  Scenario: Seller should able to cancel all spot limit sell orders
-    Given seller cancels all open spot limit sell orders
-    Then all orders should be canceled successfully
+  #In here seller and buyer will be same user because seller login system and placed sell order and buy order for system terminated (self matching)
+  Scenario Outline: Place a Buy Spot Limit Order
+    Given the buyer navigates to the spot order placement page
+    When the buyer selects the order type
+    And the buyer enters a limit buy price of "<limit_buy_price>"
+    And the buyer enters a quantity of "<quantity>"
+    And the buyer submits the order
+    And the buy order should be placed successfully
+    And the buyer info notification should be displayed
+#    Then the buyer logout
+
+    Examples:
+      | limit_buy_price | quantity |
+      | 5.00            | 3        |
+
 
   Scenario: Validate seller credit balance after executing spot limit matching order
     Given the seller navigates to the account page
@@ -50,5 +61,10 @@ Feature: Seller Spot Limit Full Filled Order Placement and Cancellation
 
   Scenario: Validate seller account balance after executing a spot limit sell order
     Given the seller retrieves the new account balance
-    Then the seller's available account balance should be unchanged from the initial available account balance
+    Then the seller validates that the block amount has increased
+    And the seller validates that the available balance has decreased
 
+  Scenario: Buyer cancel all open orders
+    Given the buyer navigates to the spot order placement page
+    When buyer cancels all open spot limit sell orders
+    Then buyer all orders should be canceled successfully
