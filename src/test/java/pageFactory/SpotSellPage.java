@@ -46,8 +46,7 @@ public class SpotSellPage {
     @FindBy(css = "[data-test='cancel-all-btn']")
     WebElement cancelAllButton;
 
-    @FindBy(css = "[data-test='cancel-now']")
-    WebElement cancelNowButton;
+
 
     // Locate all order id rows
     @FindBy(css = "[data-test='openOrderId']")
@@ -90,8 +89,11 @@ public class SpotSellPage {
     public boolean isCancelAllButtonEnabled() {
         return cancelAllButton.isEnabled();
     }
+    @FindBy(css = "[data-test='cancel-now']")
+    WebElement cancelNowButton;
     public void clickCancelAllButton(){
         cancelAllButton.click();
+
         cancelNowButton.click();
 
     }

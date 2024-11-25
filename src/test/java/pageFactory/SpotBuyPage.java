@@ -40,7 +40,7 @@ public class SpotBuyPage {
     @FindBy(id = "success-message")
     WebElement successMessage;
 
-    @FindBy(id="info-notification")
+    @FindBy(id = "info-notification")
     WebElement infoNotification;
 
     @FindBy(css = "[data-test='cancel-all-btn']")
@@ -99,10 +99,12 @@ public class SpotBuyPage {
     public String getInfoNotificationText() {
         return infoNotification.getText();
     }
+
     public boolean isCancelAllButtonEnabled() {
         return cancelAllButton.isEnabled();
     }
-    public void clickCancelAllButton(){
+
+    public void clickCancelAllButton() {
         cancelAllButton.click();
 
         // Wait for a specific time interval (e.g., 2 seconds)
